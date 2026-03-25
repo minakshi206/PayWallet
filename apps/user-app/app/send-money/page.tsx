@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useRecoilValue,useSetRecoilState } from "recoil";
 import { userState } from "../../recoil/atom";
 import "./sendmoney.css";
-import { sendPaymentEmails } from "../../../lib/email";
+
 import toast from "react-hot-toast";
 
 export default function SendMoneyPage() {
