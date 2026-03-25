@@ -48,17 +48,8 @@ const features: Feature[] = [
 
 export default function Home() {
   const router = useRouter();
-    const navItems = [
-    { label: "Home", path: "/home" },
-    { label: "Dashboard", path: "/dashboard" },
-    { label: "Add Money", path: "/add-money" },
-    { label: "Send Money", path: "/send-money" },
-    { label: "History", path: "/transactions" },
-  ];
 
   return (
-
-    
     <Box sx={{ bgcolor: "#f8fafc" }}>
       {/* ================= HERO ================= */}
       <Box
@@ -70,8 +61,7 @@ export default function Home() {
       >
         <Container>
           <Grid container spacing={6} alignItems="center">
-          <Grid size={{ xs: 12, md: 4 }}>
-
+            <Grid size={{ xs: 12, md: 4 }}>
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -84,76 +74,77 @@ export default function Home() {
                   Experience seamless digital payments. Add money, send money,
                   and track transactions in one place.
                 </Typography>
-
-            
               </motion.div>
             </Grid>
 
-               <Grid size={{ xs: 12, md: 4 }}>
-  <motion.div
-    animate={{ y: [0, -20, 0] }}
-    transition={{
-      duration: 3,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }}
-    style={{
-      display: "flex",
-      justifyContent: { xs: "center", md: "flex-end" },
-     
-      height: "100%",
-    }}
-  >
-    <Box
-      sx={{
-        width: 320,
-        borderRadius: 4,
-        p: 5,
-        background:
-         "linear-gradient(135deg, #1e3a8a, #c2410c)",
-        backdropFilter: "blur(16px)",
-        boxShadow: "0 25px 70px rgba(0,0,0,0.45)",
-        color: "white",
-        textAlign: "center",
-      }}
-    >
-      <Typography variant="h6" fontWeight={600}>
-        Ready to get started?
-      </Typography>
+            {/* ✅ FIXED PART */}
+            <Grid size={{ xs: 12, md: 4 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: { xs: "center", md: "flex-end" },
+                  height: "100%",
+                }}
+              >
+                <motion.div
+                  animate={{ y: [0, -20, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 320,
+                      borderRadius: 4,
+                      p: 5,
+                      background:
+                        "linear-gradient(135deg, #1e3a8a, #c2410c)",
+                      backdropFilter: "blur(16px)",
+                      boxShadow: "0 25px 70px rgba(0,0,0,0.45)",
+                      color: "white",
+                      textAlign: "center",
+                    }}
+                  >
+                    <Typography variant="h6" fontWeight={600}>
+                      Ready to get started?
+                    </Typography>
 
-      <Typography
-        variant="body2"
-        sx={{ mt: 1, color: "rgba(255,255,255,0.75)" }}
-      >
-        Send money, track payments & manage wallet instantly.
-      </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ mt: 1, color: "rgba(255,255,255,0.75)" }}
+                    >
+                      Send money, track payments & manage wallet instantly.
+                    </Typography>
 
-      <Button
-        fullWidth
-        variant="contained"
-        endIcon={<ArrowForward />}
-        sx={{
-          mt: 3,
-          bgcolor: "white",
-          color: "primary.main",
-          fontWeight: 600,
-          borderRadius: 99,
-          "&:hover": {
-            bgcolor: "#f5f5f5",
-          },
-        }}
-        onClick={() => router.push("/dashboard")}
-      >
-        Go to Dashboard
-      </Button>
-    </Box>
-  </motion.div>
-</Grid>
-
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      endIcon={<ArrowForward />}
+                      sx={{
+                        mt: 3,
+                        bgcolor: "white",
+                        color: "primary.main",
+                        fontWeight: 600,
+                        borderRadius: 99,
+                        "&:hover": {
+                          bgcolor: "#f5f5f5",
+                        },
+                      }}
+                      onClick={() => router.push("/dashboard")}
+                    >
+                      Go to Dashboard
+                    </Button>
+                  </Box>
+                </motion.div>
+              </Box>
+            </Grid>
           </Grid>
         </Container>
       </Box>
-  {/* ================= PROJECT DEMO VIDEO ================= */}
+
+      {/* ================= VIDEO ================= */}
       <Box sx={{ py: 8, bgcolor: "grey.100" }}>
         <Container>
           <Typography variant="h4" fontWeight={700} align="center" mb={4}>
@@ -178,17 +169,6 @@ export default function Home() {
               style={{ width: "100%", height: "auto" }}
             />
           </Box>
-
-          <Typography
-            align="center"
-            color="text.secondary"
-            mt={3}
-            maxWidth={700}
-            mx="auto"
-          >
-            This demo showcases login flow, money transfers, transaction
-            history, and dashboard features of the PayWallet project.
-          </Typography>
         </Container>
       </Box>
 
@@ -214,11 +194,6 @@ export default function Home() {
           </Grid>
         </Container>
       </Box>
-
-      {/* ================= CTA ================= */}
-      
-
-     
     </Box>
   );
 }
