@@ -1,0 +1,53 @@
+{
+  "name": "paytm-clone",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "dev": "concurrently \"npm run dev:user\" \"npm run dev:bank-server\" \"npm run dev:webhook\" \"npm run dev:bank-ui\"",
+    "dev:user": "cd apps/user-app && npm run dev",
+    "dev:bank-server": "node apps/bank-server/index.js",
+    "dev:webhook": "node apps/bank-webhookhandler/index.js",
+    "dev:bank-ui": "cd apps/bank-ui && npm run dev -- -p 4000"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/uuid": "^10.0.0",
+    "autoprefixer": "^10.4.24",
+    "concurrently": "^9.2.1",
+    "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.18",
+    "ts-node": "^10.9.2",
+    "turbo": "^2.6.0",
+    "typescript": "^5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "npm@10.9.2",
+  "workspaces": [
+    "apps/user-app",
+    "apps/bank-server",
+    "apps/bank-webhookhandler",
+    "apps/bank-ui",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@mui/icons-material": "^7.3.7",
+    "@mui/material": "^7.3.7",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^6.19.0",
+    "baseline-browser-mapping": "^2.10.9",
+    "framer-motion": "^12.24.12",
+    "node-fetch": "^2.7.0",
+    "openai": "^6.32.0",
+    "pg": "^8.16.3",
+    "prisma": "^6.19.0",
+    "react-hot-toast": "^2.6.0",
+    "resend": "^6.9.3",
+    "uuid": "^13.0.0"
+  }
+}

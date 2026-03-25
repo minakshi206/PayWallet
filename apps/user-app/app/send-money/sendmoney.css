@@ -1,0 +1,125 @@
+.send-container{
+display:flex;
+flex-direction:column;
+align-items:center;
+padding-top:60px;
+min-height:100vh;
+background:#f4f6f9;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+/* Header */
+
+.send-header{
+text-align:center;
+margin-bottom:30px;
+}
+
+.send-header h1{
+font-size:28px;
+margin:10px 0 4px 0;
+color:#222;
+}
+
+.send-header p{
+color:#8a94a6;
+font-size:15px;
+}
+
+/* Icon */
+
+.send-icon{
+width:64px;
+height:64px;
+background:linear-gradient(135deg,#243c84,#3c5fa5);
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:28px;
+margin:auto;
+box-shadow:0 8px 18px rgba(0,0,0,0.15);
+}
+
+/* Balance Card */
+
+.balance-card{
+background:linear-gradient(135deg,#243c84,#3c5fa5);
+color:white;
+padding:22px 90px;
+border-radius:40px;
+text-align:center;
+margin-bottom:35px;
+box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+.balance-card span{
+font-size:14px;
+opacity:0.8;
+}
+
+.balance-card h2{
+font-size:32px;
+margin-top:5px;
+}
+
+/* Form Card */
+
+.send-card{
+background:#f1f3f6;
+padding:30px;
+border-radius:30px;
+width:420px;
+display:flex;
+flex-direction:column;
+gap:18px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Inputs */
+
+.send-card input{
+padding:14px 16px;
+border-radius:14px;
+border:1px solid #d1d5db;
+font-size:15px;
+outline:none;
+background:white;
+}
+
+.send-card input:focus{
+border-color:#243c84;
+}
+
+/* Button */
+
+.send-card button{
+margin-top:10px;
+padding:14px;
+border:none;
+background:linear-gradient(135deg,#243c84,#3c5fa5);
+color:white;
+font-size:16px;
+font-weight:600;
+border-radius:30px;
+cursor:pointer;
+transition:0.2s;
+}
+
+.send-card button:hover{
+opacity:0.95;
+}
+
+.send-card button:disabled{
+background:#d1d5db;
+cursor:not-allowed;
+}
+
+/* Footer */
+
+.send-footer{
+margin-top:25px;
+color:#8a94a6;
+font-size:14px;
+}
