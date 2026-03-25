@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { sendPaymentEmails } from "../../../../lib/email";
 
-const prisma = new PrismaClient();
+
+
 
 export async function POST(req: Request) {
   try {
@@ -87,8 +87,8 @@ export async function POST(req: Request) {
       })
     ]);
     console.log("Transaction completed");
-    // 📧 send email notifications
-await sendPaymentEmails(sender.email, receiver.email, sendAmount);
+  
+
 
     return NextResponse.json(
       { message: "Money sent successfully" },
