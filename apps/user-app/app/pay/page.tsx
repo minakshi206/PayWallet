@@ -1,6 +1,5 @@
-
-"use client";
-export const dynamic = "force-dynamic";
+"use client"; // ✅ must be the very first line
+export const dynamic = "force-dynamic"; // ensures page is dynamic, avoids prerender error
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
