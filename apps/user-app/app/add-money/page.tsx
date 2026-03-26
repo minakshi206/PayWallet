@@ -22,10 +22,10 @@ export default function AddMoney() {
 
       const parsed = JSON.parse(saved);
 
-       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/me`,
-        { userId: parsed.id }
-      );
+      const res = await axios.post(
+  `/api/me`,
+  { userId: parsed.id }
+);
 
       const updatedUser = {
         ...parsed,
@@ -53,8 +53,8 @@ const handleAdd = async () => {
   try {
     setLoading(true);
 
-  const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/add-money`,
+ const res = await fetch(
+  `/api/add-money`,
         {
           method: "POST",
           headers: {
