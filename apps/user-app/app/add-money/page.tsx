@@ -52,23 +52,23 @@ const handleAdd = async () => {
   try {
     setLoading(true);
 
-    const res = await fetch("http://localhost:3001/api/add-money", {
+    const res = await fetch("/api/add-money", { // ✅ FIXED (no localhost)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: user.id,
+        user_identifier: user.id, // ✅ FIXED key name
         amount: Number(amount),
+        webhookUrl: "https://webhook-e518.onrender.com/hdfcWebhook" // ✅ YOUR WEBHOOK
       }),
     });
 
     const data = await res.json();
 
     if (data.redirectUrl) {
-      // ✅ optional info toast before redirect
       toast.success("Redirecting to secure bank...");
-      
+
       setTimeout(() => {
         window.location.href = data.redirectUrl;
       }, 1000);

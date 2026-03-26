@@ -1,65 +1,31 @@
-import { NextResponse } from "next/server";
-import { prisma } from "../../../prisma";
+export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+import { NextResponse } from "next/server";
+
+export async function POST(req) {
   try {
     const body = await req.json();
-    const { userId, amount } = body;
 
-    if (!userId || !amount) {
-      return NextResponse.json(
-        { message: "User ID and amount are required" },
-        { status: 400 }
-      );
-    }
-
-    // Call dummy bank server
-    const bankRes = await fetch("http://localhost:3002/api/transaction", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_identifier: userId,
-        amount: Number(amount) * 100,
-        webhookUrl: "http://localhost:3003/hdfcWebhook",
-      }),
-    });
-
-    const data = await bankRes.json();
-
-    console.log("Bank response:", data);
-
-    const token = data.token;
-
-    // Save transaction
-    await prisma.transaction.create({
-      data: {
-        amount: Number(amount),
-        token: token,
-        status: "pending",
-
-        sender: {
-          connect: { id: userId },
+    // Call your deployed bank-server
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify(body),
+      }
+    );
 
-        receiver: {
-          connect: { id: userId },
-        },
-      },
-    });
+    const data = await res.json();
 
-    // IMPORTANT: ALWAYS RETURN RESPONSE
-    return NextResponse.json({
-      redirectUrl: data.redirectUrl,
-      token: token,
-    });
-
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Add Money API Error:", error);
+    console.error("Add Money Error:", error);
 
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: "Error adding money" },
       { status: 500 }
     );
   }

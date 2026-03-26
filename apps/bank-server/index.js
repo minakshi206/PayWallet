@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { randomUUID } = require("crypto");
-const fetch = require("node-fetch"); // ✅ FIXED
+const fetch = require("node-fetch");
 
 const app = express();
 app.use(cors());
@@ -27,11 +27,10 @@ app.post("/api/transaction", (req, res) => {
     status: "PENDING"
   };
 
- return res.json({
-token,
-redirectUrl: `http://localhost:4000/pay?token=${token}`,
-});
-
+  return res.json({
+    token,
+    redirectUrl: `${process.env.FRONTEND_URL}/pay?token=${token}`, // ✅ FIXED
+  });
 });
 
 app.get("/transaction/:token", (req, res) => {
@@ -65,5 +64,5 @@ app.post("/pay/success", async (req, res) => {
 });
 
 app.listen(3002, () => {
-  console.log("Dummy Bank Server running at http://localhost:3002");
+  console.log("Bank Server running");
 });
