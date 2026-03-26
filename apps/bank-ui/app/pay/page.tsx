@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
@@ -16,16 +17,20 @@ export default function PayPage() {
   const [data, setData] = useState<TransactionData | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // 🔹 Fetch transaction details
   useEffect(() => {
     if (!token) return;
 
     const fetchInfo = async () => {
       try {
-        const res = await fetch(`http://localhost:3002/transaction/${token}`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BANK_URL}/transaction/${token}`
+        );
         const json = await res.json();
         setData(json);
       } catch (error) {
         console.error("Error:", error);
+        toast.error("Failed to load transaction");
       } finally {
         setLoading(false);
       }
@@ -34,50 +39,51 @@ export default function PayPage() {
     fetchInfo();
   }, [token]);
 
- const paySuccess = async () => {
-  if (!token) return;
+  // ✅ SUCCESS PAYMENT
+  const paySuccess = async () => {
+    if (!token) return;
 
-  try {
-    await fetch("http://localhost:3002/pay/success", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token }),
-    });
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BANK_URL}/pay/success`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      });
 
-    toast.success("Payment successful!");
-    toast.success("Your money is being transferred...");
-    toast.success("Redirecting to dashboard...");
+      toast.success("Payment successful!");
+      toast.success("Redirecting...");
+
+      setTimeout(() => {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`;
+      }, 2000);
+    } catch (error) {
+      toast.error("Payment failed!");
+    }
+  };
+
+  // ❌ FAILED PAYMENT
+  const payFail = () => {
+    toast.error("Payment cancelled");
 
     setTimeout(() => {
-      window.location.href = "http://localhost:3001/dashboard";
-    }, 2500);
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`;
+    }, 1500);
+  };
 
-  } catch (error) {
-    toast.error("Payment error!");
-  }
-};
-
-const payFail = () => {
-  toast.error("Payment failed!");
-
-  setTimeout(() => {
-    window.location.href = "http://localhost:3001/dashboard";
-  }, 1500);
-};
-
-  // ✅ LOADING UI
-  if (loading)
+  // ⏳ Loading UI
+  if (loading) {
     return (
       <div style={styles.center}>
         <div style={styles.loader}></div>
         <p>Processing Payment...</p>
       </div>
     );
+  }
 
-  // ❌ INVALID TOKEN UI
-  if (!data)
+  // ❌ Invalid token
+  if (!data) {
     return (
       <div style={styles.center}>
         <div style={styles.card}>
@@ -86,45 +92,50 @@ const payFail = () => {
         </div>
       </div>
     );
+  }
 
   // ✅ MAIN UI
   return (
     <div style={styles.container}>
-     {/* BLUR BACKGROUND */}
-      <div style={styles.card}>
-        <h2 style={styles.title}>🏦 Secure Bank Payment</h2>
+      <div style={styles.overlay}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>🏦 Secure Bank Payment</h2>
 
-        <div style={styles.amount}>₹{data.amount / 100}</div>
+          <div style={styles.amount}>₹{data.amount / 100}</div>
 
-        <p style={styles.subtitle}>
-          Complete your payment securely
-        </p>
+          <p style={styles.subtitle}>
+            Complete your payment securely
+          </p>
 
-        <button style={styles.successBtn} onClick={paySuccess}>
-          Pay Now
-        </button>
+          <button style={styles.successBtn} onClick={paySuccess}>
+            Pay Now
+          </button>
 
-        <button style={styles.failBtn} onClick={payFail}>
-          Cancel
-        </button>
+          <button style={styles.failBtn} onClick={payFail}>
+            Cancel
+          </button>
+        </div>
       </div>
-      </div>
-    
+    </div>
   );
 }
 
-/* 🎨 INLINE STYLES (NO CSS FILE NEEDED) */
+// 🎨 STYLES
 const styles: any = {
   container: {
     height: "100vh",
+    backgroundImage: "url('/bankingg(1).jpg')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  },
+  overlay: {
+    width: "100%",
+    height: "100%",
+    backdropFilter: "blur(6px)",
+    background: "rgba(0,0,0,0.4)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-   backgroundImage: "url('/bankingg(1).jpg')",
-backgroundSize: "cover",
-backgroundPosition: "center",
-backgroundRepeat: "no-repeat",
-    padding: "10px",
   },
   center: {
     height: "100vh",
@@ -134,13 +145,13 @@ backgroundRepeat: "no-repeat",
     alignItems: "center",
   },
   card: {
-    background: "#c2bcbc",
+    background: "#fff",
     padding: "30px",
     borderRadius: "20px",
     width: "100%",
     maxWidth: "350px",
     textAlign: "center",
-    boxShadow: "0 15px 40px rgba(0,0,0,0.1)",
+    boxShadow: "0 15px 40px rgba(0,0,0,0.2)",
   },
   title: {
     marginBottom: "15px",
@@ -182,13 +193,4 @@ backgroundRepeat: "no-repeat",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
   },
-  overlay: {
-  width: "100%",
-  height: "100%",
-  backdropFilter: "blur(6px)",
-  background: "rgba(0,0,0,0.3)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-},
 };

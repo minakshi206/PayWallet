@@ -1,31 +1,51 @@
-export const dynamic = "force-dynamic";
-
 import { NextResponse } from "next/server";
+import { prisma } from "../../../lib/prisma";
 
-export async function POST(req) {
+export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const { userId, amount } = await req.json();
 
-    // Call your deployed bank-server
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/transaction`,
+    if (!userId || !amount) {
+      return NextResponse.json(
+        { message: "Missing fields" },
+        { status: 400 }
+      );
+    }
+
+    const bankRes = await fetch(
+      `${process.env.NEXT_PUBLIC_BANK_URL}/api/transaction`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify({
+          user_identifier: userId,
+          amount: Number(amount) * 100,
+          webhookUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/hdfcWebhook`,
+        }),
       }
     );
 
-    const data = await res.json();
+    const data = await bankRes.json();
 
-    return NextResponse.json(data);
+    await prisma.transaction.create({
+      data: {
+        amount: Number(amount),
+        token: data.token,
+        status: "pending",
+        sender: { connect: { id: userId } },
+        receiver: { connect: { id: userId } },
+      },
+    });
+
+    return NextResponse.json({
+      redirectUrl: data.redirectUrl,
+    });
   } catch (error) {
-    console.error("Add Money Error:", error);
-
+    console.error(error);
     return NextResponse.json(
-      { message: "Error adding money" },
+      { message: "Server error" },
       { status: 500 }
     );
   }
