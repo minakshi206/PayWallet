@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     }
 
     const bankRes = await fetch(
-      `${process.env.BANK_URL}/api/transaction`,
+      `${process.env.NEXT_PUBLIC_BANK_URL}/api/transaction`,
       {
         method: "POST",
         headers: {
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           user_identifier: userId,
           amount: Number(amount) * 100,
-          webhookUrl: `${process.env.API_URL}/api/hdfcWebhook`,
+          webhookUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/hdfcWebhook`,
         }),
       }
     );
