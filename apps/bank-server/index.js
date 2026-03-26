@@ -29,7 +29,7 @@ app.post("/api/transaction", (req, res) => {
 
   return res.json({
     token,
-    redirectUrl: `${process.env.NEXT_PUBLIC_API_URL}/pay?token=${token}`,
+    redirectUrl: `${process.env.NEXT_PUBLIC_BANK_URL}/pay?token=${token}`,
   });
 });
 
