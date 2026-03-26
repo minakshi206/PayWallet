@@ -1,8 +1,7 @@
-"use client"; // ✅ must be the very first line
-export const dynamic = "force-dynamic"; // ensures page is dynamic, avoids prerender error
+"use client";
+export const dynamic = "force-dynamic";
 
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 interface TransactionData {
@@ -12,15 +11,18 @@ interface TransactionData {
 }
 
 export default function PayPage() {
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  // If you don’t need the token from URL, just skip it
+  const token = null; // Remove useSearchParams completely
 
   const [data, setData] = useState<TransactionData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch transaction details
+  // 🔹 Fetch transaction details only if token exists
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setLoading(false);
+      return;
+    }
 
     const fetchInfo = async () => {
       try {
@@ -121,7 +123,7 @@ export default function PayPage() {
   );
 }
 
-// 🎨 STYLES
+// 🎨 STYLES (unchanged)
 const styles: any = {
   container: {
     height: "100vh",
