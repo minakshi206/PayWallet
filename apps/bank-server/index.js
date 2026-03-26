@@ -9,8 +9,13 @@ app.use(bodyParser.json());
 
 const transactions = {};
 
+// ✅ CREATE TRANSACTION
 app.post("/api/transaction", (req, res) => {
   const { user_identifier, amount, webhookUrl } = req.body;
+
+  if (!user_identifier || !amount || !webhookUrl) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
 
   const token = randomUUID();
 
@@ -26,6 +31,60 @@ app.post("/api/transaction", (req, res) => {
     token,
     redirectUrl: `${process.env.FRONTEND_URL}/pay?token=${token}`,
   });
+});
+
+// ✅ GET TRANSACTION
+app.get("/transaction/:token", (req, res) => {
+  const txn = transactions[req.params.token];
+
+  if (!txn) {
+    return res.status(404).json({ message: "Invalid token" });
+  }
+
+  res.json(txn);
+});
+
+// ✅ SUCCESS PAYMENT
+app.post("/pay/success", async (req, res) => {
+  const { token } = req.body;
+
+  const txn = transactions[token];
+  if (!txn) {
+    return res.status(404).json({ message: "Invalid token" });
+  }
+
+  console.log("Sending webhook:", txn.webhookUrl);
+
+  // 🔥 call webhook
+  await fetch(txn.webhookUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      token: txn.token,
+      user_identifier: txn.user_identifier,
+      amount: txn.amount,
+    }),
+  });
+
+  txn.status = "SUCCESS";
+
+  res.json({ message: "Payment success" });
+});
+
+// ❌ FAIL PAYMENT
+app.post("/pay/fail", (req, res) => {
+  const { token } = req.body;
+
+  const txn = transactions[token];
+  if (!txn) {
+    return res.status(404).json({ message: "Invalid token" });
+  }
+
+  txn.status = "FAILED";
+
+  res.json({ message: "Payment failed" });
 });
 
 app.listen(3002, () => {
