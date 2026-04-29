@@ -12,11 +12,15 @@ interface TransactionData {
 
 export default function PayPage() {
   // If you don’t need the token from URL, just skip it
-  const token = null; // Remove useSearchParams completely
+ const [token, setToken] = useState<string | null>(null);
 
   const [data, setData] = useState<TransactionData | null>(null);
   const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setToken(params.get("token"));
+  }, []);
   // 🔹 Fetch transaction details only if token exists
   useEffect(() => {
     if (!token) {
