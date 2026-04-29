@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           user_identifier: userId,
           amount: Number(amount) * 100,
-          webhookUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/hdfcWebhook`,
+         webhookUrl: `https://webhook-e518.onrender.com/hdfcWebhook`,
         }),
       }
     );
