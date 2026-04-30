@@ -93,8 +93,8 @@ app.post("/send-money", async (req, res) => {
       prisma.transaction.create({
         data: {
           amount: amt,
-          sender: { connect: { id: fromUserId } },
-          receiver: { connect: { id: toUserId } },
+          senderId: { connect: { id: fromUserId } },
+          receiverId: { connect: { id: toUserId } },
           status: "success"
         }
       })
@@ -103,9 +103,9 @@ app.post("/send-money", async (req, res) => {
     res.json({ message: "Money sent successfully" });
 
   } catch (err) {
-    console.error("Send money error FULL:", err); // 🔥 important
-    res.status(500).json({ message: "Transaction failed" });
-  }
+  console.error("SEND MONEY ERROR:", err);
+  res.status(500).json({ message: err.message || "Transaction failed" });
+}
 });
 /* ✅ SERVER START MUST BE OUTSIDE ROUTE */
 app.listen(3003, () => {
