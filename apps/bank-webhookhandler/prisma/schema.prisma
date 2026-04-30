@@ -25,7 +25,7 @@ model Transaction {
   senderId   String
   receiverId String
   status     String   @default("success")
-  token       String  @unique
+  token       String?  @unique
 
   sender   User @relation("SentTransactions", fields: [senderId], references: [id])
   receiver User @relation("ReceivedTransactions", fields: [receiverId], references: [id])
