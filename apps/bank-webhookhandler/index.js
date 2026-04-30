@@ -60,17 +60,19 @@ app.post("/hdfcWebhook", async (req, res) => {
 });
 
 app.post("/send-money", async (req, res) => {
-  const { fromUserId, toUserId, amount } = req.body;
+  const { senderId, receiverEmail, amount } = req.body;
 
   const amt = Number(amount);
 
   try {
+    // ✅ find sender
     const sender = await prisma.user.findUnique({
-      where: { id: fromUserId }
+      where: { id: senderId }
     });
 
+    // ✅ find receiver by email
     const receiver = await prisma.user.findUnique({
-      where: { id: toUserId }
+      where: { email: receiverEmail }
     });
 
     if (!sender || !receiver) {
@@ -83,26 +85,25 @@ app.post("/send-money", async (req, res) => {
 
     await prisma.$transaction([
       prisma.user.update({
-        where: { id: fromUserId },
+        where: { id: senderId },
         data: { balance: { decrement: amt } }
       }),
       prisma.user.update({
-        where: { id: toUserId },
+        where: { id: receiver.id },
         data: { balance: { increment: amt } }
       }),
       prisma.transaction.create({
         data: {
           amount: amt,
-          senderId: { connect: { id: fromUserId } },
-          receiverId: { connect: { id: toUserId } },
+          senderId: senderId,
+          receiverId: receiver.id,
           status: "success"
         }
       })
     ]);
 
     res.json({ message: "Money sent successfully" });
-
-  } catch (err) {
+    } catch (err) {
   console.error("SEND MONEY ERROR:", err);
   res.status(500).json({ message: err.message || "Transaction failed" });
 }
