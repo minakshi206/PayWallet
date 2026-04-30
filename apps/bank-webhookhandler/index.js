@@ -59,6 +59,61 @@ app.post("/hdfcWebhook", async (req, res) => {
 
 });
 
+app.post("/send-money", async (req, res) => {
+  const { fromUserId, toUserId, amount } = req.body;
+
+  console.log("FROM:", fromUserId);
+  console.log("TO:", toUserId);
+  console.log("AMOUNT:", amount);
+
+  try {
+    const sender = await prisma.user.findUnique({
+      where: { id: fromUserId }
+    });
+
+    const receiver = await prisma.user.findUnique({
+      where: { id: toUserId }
+    });
+
+    if (!sender || !receiver) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (sender.balance < amount) {
+      return res.status(400).json({ message: "Insufficient balance" });
+    }
+
+    await prisma.$transaction([
+      prisma.user.update({
+        where: { id: fromUserId },
+        data: {
+          balance: { decrement: amount }
+        }
+      }),
+      prisma.user.update({
+        where: { id: toUserId },
+        data: {
+          balance: { increment: amount }
+        }
+      }),
+      prisma.transaction.create({
+        data: {
+          amount,
+          senderId: fromUserId,
+          receiverId: toUserId,
+          status: "success"
+        }
+      })
+    ]);
+
+    res.json({ message: "Money sent successfully" });
+
+  } catch (err) {
+    console.error("Send money error:", err);
+    res.status(500).json({ message: "Transaction failed" });
+  }
+});
+
 /* ✅ SERVER START MUST BE OUTSIDE ROUTE */
 app.listen(3003, () => {
   console.log("Webhook handler running on port 3003");
